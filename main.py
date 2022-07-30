@@ -1,4 +1,5 @@
 from email import header
+import time
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -84,35 +85,69 @@ with mp_hands.Hands(
                 #     image,
                 #     hand_landmarks,
                 #     mp_hands.HAND_CONNECTIONS)
-                drawline(image, (lmList[4][1], lmList[4][2]), (lmList[8]
-                         [1], lmList[8][2]), (0, 0, 0), 2, 'dotted', 10)
-                # calculate the distance between the tips of index and thumb
-                dist = int(((lmList[4][1] - lmList[8][1]) ** 2 +
-                            (lmList[4][2] - lmList[8][2]) ** 2) ** .5)
-                # print(dist)
-                max_distance = 200
-                dist_percentage = int((dist / max_distance) * 100)
-                if dist_percentage > 100:
-                    dist_percentage = 100
-                print(dist_percentage)
-                # send the request
-                data = {
-                    "command": "adjustment",
-                    "adjustment":
-                    {
-                        "classic_config": False,
-                        "brightness": dist_percentage
+                if (lmList[4][1] > lmList[3][1] and lmList[8][1] > lmList[6][1] and lmList[12][1] < lmList[10][1] and lmList[16][1] < lmList[14][1] and lmList[20][1] < lmList[18][1]):
+                    print("thumb up")
+                    drawline(image, (lmList[4][1], lmList[4][2]), (lmList[8]
+                                                                   [1], lmList[8][2]), (0, 0, 0), 2, 'dotted', 10)
+                    # calculate the distance between the tips of index and thumb
+                    dist = int(((lmList[4][1] - lmList[8][1]) ** 2 +
+                                (lmList[4][2] - lmList[8][2]) ** 2) ** .5)
+                    # print(dist)
+                    max_distance = 200
+                    dist_percentage = int((dist / max_distance) * 100)
+                    if dist_percentage > 100:
+                        dist_percentage = 100
+                    print(dist_percentage)
+                    # send the request
+                    data = {
+                        "command": "adjustment",
+                        "adjustment":
+                        {
+                            "classic_config": False,
+                            "brightness": dist_percentage
+                        }
                     }
-                }
-                response = requests.post(
-                    endpoint, data=json.dumps(data), headers=headers)
-                print(response.text)
+                    response = requests.post(
+                        endpoint, data=json.dumps(data), headers=headers)
+                    print(response.text)
+                elif (lmList[8][2] < lmList[6][2] and lmList[12][2] < lmList[10][2] and lmList[16][2] > lmList[14][2] and lmList[20][2] > lmList[18][2]):
+                    print("peace sign")
+                    data = {
+                        "command": "componentstate",
+                        "componentstate":
+                        {
+                            "component": "LEDDEVICE",
+                            "state": True
+                        }
+                    }
+                    response = requests.post(
+                        endpoint, data=json.dumps(data), headers=headers)
+                    print("Light turned on")
+                    time.sleep(2)
+                elif (lmList[12][2] < lmList[10][2] and lmList[16][2] > lmList[14][2] and lmList[20][2] > lmList[18][2] and lmList[8][2] > lmList[6][2]):
 
-        # Flip the image horizontally for a selfie-view display.
+                    print("fuck off sign")
+                    data = {
+                        "command": "componentstate",
+                        "componentstate":
+                        {
+                            "component": "LEDDEVICE",
+                            "state": False
+                        }
+                    }
+                    response = requests.post(
+                        endpoint, data=json.dumps(data), headers=headers)
+                    print("Light turned off")
+                    time.sleep(2)
+                # check if the hand is open
+                elif (lmList[4][1] > lmList[3][1] and lmList[8][2] < lmList[6][2] and lmList[12][2] < lmList[10][2] and lmList[16][2] < lmList[14][2] and lmList[20][2] < lmList[18][2]):
+                    print("hand is open")
+                    time.sleep(5)
+                    # Flip the image horizontally for a selfie-view display.
         cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
         # get fps
         fps = cap.get(cv2.CAP_PROP_FPS)
-        #print("fps: ", fps)
+        # print("fps: ", fps)
         if cv2.waitKey(5) & 0xFF == 27:
             break
         # if q is pressed, close the window

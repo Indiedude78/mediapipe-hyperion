@@ -18,7 +18,7 @@ hands = mpHands.Hands(
     model_complexity=1,
     min_detection_confidence=0.75,
     min_tracking_confidence=0.75,
-    max_num_hands=1)
+    max_num_hands=2)
 
 # define the endpoint
 endpoint = "http://192.168.1.117:8090/json-rpc"
@@ -74,7 +74,7 @@ while True:
                         mpDrawStyles.get_default_hand_connections_style())
                     tips = [0, 4, 8, 12, 16, 20]
                     # get the tip of the index finger
-                    
+
                     data = {
                         "command": "componentstate",
                         "componentstate":
