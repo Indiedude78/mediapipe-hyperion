@@ -123,7 +123,6 @@ with mp_hands.Hands(
                     response = requests.post(
                         endpoint, data=json.dumps(data), headers=headers)
                     print("Light turned on")
-                    time.sleep(2)
                 elif (lmList[12][2] < lmList[10][2] and lmList[16][2] > lmList[14][2] and lmList[20][2] > lmList[18][2] and lmList[8][2] > lmList[6][2]):
 
                     print("fuck off sign")
@@ -138,11 +137,10 @@ with mp_hands.Hands(
                     response = requests.post(
                         endpoint, data=json.dumps(data), headers=headers)
                     print("Light turned off")
-                    time.sleep(2)
                 # check if the hand is open
                 elif (lmList[4][1] > lmList[3][1] and lmList[8][2] < lmList[6][2] and lmList[12][2] < lmList[10][2] and lmList[16][2] < lmList[14][2] and lmList[20][2] < lmList[18][2]):
                     print("hand is open")
-                    time.sleep(5)
+                    time.sleep(2)
                     # Flip the image horizontally for a selfie-view display.
         cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
         # get fps
